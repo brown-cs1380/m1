@@ -34,7 +34,7 @@ The following online resources might be useful for this milestone:
 This milestone is the first to introduce the `distribution` library. When loaded, `distribution` introduces functionality supporting the distributed execution of programs. The component responsible for serialization and deserialization is a small part of this library, under its `util` object. Here's its expected use:
 
 
-```
+```js
 let util = require("distribution").util;
 let cs1380 = {title: "Distr. Systems", instructor: "Nikos", cap: 200}; 
 let s = util.serialize(cs1380); 
@@ -55,10 +55,12 @@ In the object graphs above, objects are displayed using yellow, numbers are disp
 The simplest possible structures are the base JavaScript types `Number`, `String`, `Boolean`, `null`, and `undefined`. These can be straightforwardly serialized to a string by using their `toString()` method. After attaching some additional metadata, these strings can be sent over the wire — for example:
 
 
-```
+```js
 console.log(util.serialize(3));
-{ type: "Number",
-  value: "3" }
+{ 
+  type: "Number",
+  value: "3" 
+}
 ```
 
 
@@ -70,7 +72,7 @@ As expected, calling `util.deserialize()` on the serialized object should return
 There are several structures that are significantly more complex than these base structures — for example, Objects are significantly more complex for a few different reasons. First, they might have a recursive structure and can even mix with one another. A case in which an array of objects contains arrays with numbers and strings is perfectly valid — for example:
 
 
-```
+```js
 var o = [{tr1: [1, "one"], tr2: [2, "two"], tr3: [3, "three"]}]
 ```
 
@@ -78,7 +80,7 @@ var o = [{tr1: [1, "one"], tr2: [2, "two"], tr3: [3, "three"]}]
 Second, these objects support a form of subtyping and complex construction, which complicates things significantly. For example, `Date` is a subtype of `Object` — with its own methods:
 
 
-```
+```js
 Date().toLowerCase()
 ```
 
@@ -88,7 +90,7 @@ Therefore serializing `Object`, `Function`, `Array`, and `Date` structures—to 
 Note, however, that not all functions are serializable — some might depend on some global state. For example, the function `incr` below cannot be properly serialized without additional support, even if the body is indeed serializable and transferable to a remote node:
 
 
-```
+```js
 let sum = 0;
 let incr = (n) => {
   sum += n;
@@ -105,7 +107,7 @@ We will return to this challenge later in the next Milestone.
 Objects may even feature an additional complexity: cycles. Cyclic structures are ones that contain a value with (or that points to) precisely the same structure. An example is the following simple structure:
 
 
-```
+```js
 let user = { first: "Josiah", last: "Carberry" };
 user["self"] = user; // user.self points to user
 ```
@@ -119,9 +121,11 @@ Serializing cyclic structures requires solving a few challenges. One is the abil
 At times, the user of the serialization library will attempt to serialize native functionality — that is, functionality that is natively provided by the runtime environment and does not have a representation in the source language. One example is `console.log` — you did not write this function nor is it part of a JavaScript module; it is implemented natively by the runtime environment which invokes a corresponding system call provided by the operating system.
 
 
-```
+```js
 > console.log.toString()
-'function () { [native code] }'
+'function () { 
+  [native code] 
+}'
 ```
 
 
@@ -199,7 +203,6 @@ You are allowed to submit as many times as you want up until the deadline; so _s
 ## Feedback 
 
 Please let us know if you find any mistakes, inconsistencies, or confusing language in this or any other CS1380 document by (1) emailing [cs1380headtas@lists.brown.edu](mailto:cs1380headtas@lists.brown.edu), or (2)  filling out the [M1 anonymous feedback form](https://forms.gle/B1bHazXnLPTX26XQ8). In both cases, concrete ideas on how to improve things would be appreciated.
-
 
 <!-- Footnotes themselves at the bottom. -->
 ## Notes
